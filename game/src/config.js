@@ -105,11 +105,18 @@ export const GAME_CONSTANTS = {
     burnTime: 8000,
     rushStartTime: 60,
     playerSpeed: 320,
+    playerAccel: 1800,
+    playerFriction: 0.82,
     customerCount: 3,
     orderInterval: 20000,
     rushOrderInterval: 14000,
     patienceDrainNormal: 0.012,
-    patienceDrainRush: 0.0156
+    patienceDrainRush: 0.0156, // 30% faster drain once the midnight rush begins
+    fastServiceThreshold: 0.75, // patience ratio above which a fast-service tip is awarded
+    fastServiceBonus: 4,
+    maxPlateSize: 4, // cap plate stacking to avoid absurd ingredient piles
+    streakWindow: 10000, // ms; consecutive serves within this window build a combo
+    streakBonus: 3
 };
 
 export const SCREENS = {

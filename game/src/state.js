@@ -10,6 +10,9 @@ export const createState = () => ({
     orders: [],
     rushMode: false,
     gameOverCause: '',
+    combo: 0,
+    lastServeTime: 0,
+    dishesServed: 0,
     stations: {
         stove1: { content: [], cookTimer: 0, cooked: false, burning: false },
         stove2: { content: [], cookTimer: 0, cooked: false, burning: false },
@@ -22,7 +25,9 @@ export const createState = () => ({
         width: 40,
         height: 40,
         facingX: 1,
-        facingY: 0
+        facingY: 0,
+        vx: 0,
+        vy: 0
     }
 });
 

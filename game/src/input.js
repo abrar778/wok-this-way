@@ -1,4 +1,5 @@
 export const keys = {};
+const handled = new Set();
 
 window.addEventListener('keydown', e => {
     keys[e.code] = true;
@@ -9,6 +10,7 @@ window.addEventListener('keydown', e => {
 
 window.addEventListener('keyup', e => {
     keys[e.code] = false;
+    handled.delete(e.code);
 });
 
 export const isKeyDown = (code) => !!keys[code];
@@ -17,15 +19,24 @@ export const setupInput = (state, handleInteract, serveDish, resetGame) => {
     window.addEventListener('keydown', e => {
         if (state.screen === 'play') {
             if (e.code === 'KeyE' || e.code === 'Space') {
-                handleInteract();
+                if (!handled.has(e.code)) {
+                    handleInteract();
+                    handled.add(e.code);
+                }
                 e.preventDefault();
             }
             if (e.code === 'KeyF') {
-                serveDish();
+                if (!handled.has(e.code)) {
+                    serveDish();
+                    handled.add(e.code);
+                }
                 e.preventDefault();
             }
         } else if (e.code === 'Enter') {
-            resetGame();
+            if (!handled.has(e.code)) {
+                resetGame();
+                handled.add(e.code);
+            }
             e.preventDefault();
         }
     });

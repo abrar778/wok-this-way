@@ -49,8 +49,10 @@ export const checkOrderMatch = (plateIngredients, order) => {
     return plateIngredients.every(p => p.state === 'chopped');
 };
 
-export const calculateOrderValue = (order) => {
+export const calculateOrderValue = (order, streak = 0) => {
     const base = RECIPES[order.recipe].price || 10;
-    const bonus = Math.floor(base * (order.patience / 100));
-    return base + bonus;
+    const patienceRatio = order.patience / order.maxPatience;
+    const patienceBonus = Math.floor(base * patienceRatio);
+    const fastBonus = patienceRatio >= GAME_CONSTANTS.fastServiceThreshold ? GAME_CONSTANTS.fastServiceBonus : 0;
+    return base + patienceBonus + fastBonus + streak;
 };

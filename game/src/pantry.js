@@ -1,4 +1,4 @@
-import { STATIONS, INGREDIENTS } from './config.js';
+import { STATIONS, INGREDIENTS, GAME_CONSTANTS } from './config.js';
 
 export const getStationAt = (x, y) => {
     for (const [name, rect] of Object.entries(STATIONS)) {
@@ -27,13 +27,18 @@ export const handleStationInteraction = (state, stationName) => {
     const held = state.heldItem;
 
     if (stationName === 'pantry') {
-        if (!held) {
-            const currentIndex = INGREDIENTS.indexOf(state.lastIngredient || 'rice');
-            const nextIndex = (currentIndex + 1) % INGREDIENTS.length;
-            const item = INGREDIENTS[nextIndex];
-            state.heldItem = item;
-            state.lastIngredient = item;
+        let startIndex = -1;
+        if (held && typeof held === 'string' && INGREDIENTS.includes(held)) {
+            startIndex = INGREDIENTS.indexOf(held);
+        } else if (state.lastIngredient && INGREDIENTS.includes(state.lastIngredient)) {
+            startIndex = INGREDIENTS.indexOf(state.lastIngredient);
+        } else {
+            startIndex = INGREDIENTS.length - 1;
         }
+        const nextIndex = (startIndex + 1) % INGREDIENTS.length;
+        const item = INGREDIENTS[nextIndex];
+        state.heldItem = item;
+        state.lastIngredient = item;
         return;
     }
 
@@ -85,6 +90,7 @@ export const handleStationInteraction = (state, stationName) => {
 
     if (stationName === 'plating') {
         if (held && typeof held === 'string') {
+            if (station.content.length >= GAME_CONSTANTS.maxPlateSize) return; // plate full
             const parsed = parseHeldItem(held);
             if (parsed && parsed.state !== 'burnt' && parsed.state !== 'raw') {
                 station.content.push({ name: parsed.name, state: parsed.state });

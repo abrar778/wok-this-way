@@ -4,6 +4,15 @@ let noiseBuffer = null;
 let sizzleSource = null;
 let sizzleGain = null;
 
+const VOLUMES = {
+    chop: 0.22,
+    cook: 0.12,
+    serve: 0.18,
+    error: 0.16,
+    burn: 0.20,
+    sizzle: 0.035
+};
+
 const initAudio = () => {
     if (!initialized) {
         try {
@@ -76,26 +85,26 @@ const noiseBurst = (duration, gainValue = 0.1) => {
 };
 
 const playChop = () => {
-    oscTone(200, 'triangle', 0.08, 0.25, 120);
-    noiseBurst(0.06, 0.12);
+    oscTone(200, 'triangle', 0.08, VOLUMES.chop, 120);
+    noiseBurst(0.06, VOLUMES.chop * 0.55);
 };
 
 const playCook = () => {
-    noiseBurst(0.2, 0.08);
+    noiseBurst(0.2, VOLUMES.cook);
 };
 
 const playServe = () => {
-    oscTone(880, 'sine', 0.12, 0.2, 1760);
-    setTimeout(() => oscTone(1760, 'sine', 0.25, 0.15, 880), 110);
+    oscTone(880, 'sine', 0.12, VOLUMES.serve, 1760);
+    setTimeout(() => oscTone(1760, 'sine', 0.25, VOLUMES.serve * 0.8, 880), 110);
 };
 
 const playError = () => {
-    oscTone(150, 'sawtooth', 0.35, 0.2, 80);
+    oscTone(150, 'sawtooth', 0.35, VOLUMES.error, 80);
 };
 
 const playBurn = () => {
-    oscTone(100, 'sawtooth', 0.6, 0.25, 60);
-    noiseBurst(0.6, 0.15);
+    oscTone(100, 'sawtooth', 0.6, VOLUMES.burn, 60);
+    noiseBurst(0.6, VOLUMES.burn * 0.75);
 };
 
 export const playSound = (type) => {
@@ -129,7 +138,7 @@ export const setSizzle = (active) => {
         filter.Q.value = 0.5;
 
         const gain = audioCtx.createGain();
-        gain.gain.value = 0.04;
+        gain.gain.value = VOLUMES.sizzle;
 
         source.connect(filter);
         filter.connect(gain);

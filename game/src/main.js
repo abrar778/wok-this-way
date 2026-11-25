@@ -7,6 +7,7 @@ import { getStationAt, handleStationInteraction } from './pantry.js';
 import { generateOrder, updateOrders, checkOrderMatch, calculateOrderValue } from './orders.js';
 import { updateCooking, updateChopping } from './cook.js';
 import { playSound, setSizzle } from './audio.js';
+import { addScore } from './score.js';
 import { SCREENS, GAME_CONSTANTS } from './config.js';
 
 const canvas = document.getElementById('gameCanvas');
@@ -71,7 +72,7 @@ function serveDish() {
 
     if (matchedIndex >= 0) {
         const order = state.orders[matchedIndex];
-        state.money += calculateOrderValue(order);
+        addScore(state, calculateOrderValue(order), true);
         state.reputation = Math.min(3, state.reputation + 1);
         state.orders.splice(matchedIndex, 1);
         state.heldItem = null;

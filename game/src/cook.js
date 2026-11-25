@@ -2,9 +2,13 @@ import { GAME_CONSTANTS } from './config.js';
 
 export const updateCooking = (station, deltaTime) => {
     const events = { cooked: false, burned: false };
+    const dt = Math.max(0, deltaTime);
 
     if (station.content.length > 0) {
-        station.cookTimer += deltaTime;
+        if (!station.burning) {
+            station.cookTimer += dt;
+            station.cookTimer = Math.min(station.cookTimer, GAME_CONSTANTS.burnTime);
+        }
 
         if (!station.cooked && station.cookTimer >= GAME_CONSTANTS.cookTime) {
             station.cooked = true;
@@ -22,13 +26,14 @@ export const updateCooking = (station, deltaTime) => {
 
 export const updateChopping = (station, deltaTime) => {
     const events = { chopped: false };
+    const dt = Math.max(0, deltaTime);
 
     if (station.content && !station.chopped) {
-        station.progress += deltaTime;
+        station.progress += dt;
+        station.progress = Math.min(station.progress, GAME_CONSTANTS.chopTime);
 
         if (station.progress >= GAME_CONSTANTS.chopTime) {
             station.chopped = true;
-            station.progress = GAME_CONSTANTS.chopTime;
             events.chopped = true;
         }
     }
