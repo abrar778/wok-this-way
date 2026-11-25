@@ -1,0 +1,52 @@
+import { GAME_CONSTANTS } from './config.js';
+
+export const updateCooking = (station, deltaTime) => {
+    const events = { cooked: false, burned: false };
+
+    if (station.content.length > 0) {
+        station.cookTimer += deltaTime;
+
+        if (!station.cooked && station.cookTimer >= GAME_CONSTANTS.cookTime) {
+            station.cooked = true;
+            events.cooked = true;
+        }
+
+        if (!station.burning && station.cookTimer >= GAME_CONSTANTS.burnTime) {
+            station.burning = true;
+            events.burned = true;
+        }
+    }
+
+    return events;
+};
+
+export const updateChopping = (station, deltaTime) => {
+    const events = { chopped: false };
+
+    if (station.content && !station.chopped) {
+        station.progress += deltaTime;
+
+        if (station.progress >= GAME_CONSTANTS.chopTime) {
+            station.chopped = true;
+            station.progress = GAME_CONSTANTS.chopTime;
+            events.chopped = true;
+        }
+    }
+
+    return events;
+};
+
+export const resetCookingStation = (station) => {
+    station.content = [];
+    station.cookTimer = 0;
+    station.cooked = false;
+    station.burning = false;
+};
+
+export const resetChoppingStation = (station) => {
+    station.content = null;
+    station.progress = 0;
+    station.chopped = false;
+};
+
+export const isBurnt = (station) => station.burning;
